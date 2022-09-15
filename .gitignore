@@ -2,5 +2,4 @@
 /.mypy_cache
 .pytest_cache
 .vscode
-
 /expenses/__pycache__
