@@ -1,7 +1,7 @@
 import csv
 import datetime
 from tabulate import tabulate
-
+import calendar
 
 class Expense():
     
@@ -51,7 +51,7 @@ class Expense():
                     raise(ValueError)
                 return cls(amount, kind)
             except ValueError:
-                print(f"For amount: a positive integer \n For the type: ")
+                print(f"For amount: a positive integer \n For the type: {Expense.TYPES}")
 
     @classmethod
     def see_total_expenses_amount(self):
@@ -129,3 +129,34 @@ class Expense():
         all_expenses.append(expense)
 
         self.write_expense_to_file(all_expenses)
+
+    @classmethod
+    def read_total_per_months(self):
+        all_expenses = self.get_expenses_from_file(self)
+        months = {}
+        for item in all_expenses:
+            item['date'] = datetime.datetime.strptime(item['date'], '%Y-%m-%d')
+            month = item['date'].month
+            if month not in months:
+                months[month] = 0
+        
+        for month in months:
+            for item in all_expenses:
+                month_expense = item['date'].month
+                if month_expense == month:
+                    months[month] += int(item['amount'])
+                    
+        final_months_amount = []
+        for item in months:
+            month_str = calendar.month_name[item]
+            single_month = {}
+            single_month["month"] = month_str
+            single_month["amount"] = f"{str(months[item])} €"
+            final_months_amount.append(single_month)
+            
+        months = [months]
+        print(tabulate(final_months_amount, headers="keys", tablefmt="grid"))
+            
+            
+        
+        
