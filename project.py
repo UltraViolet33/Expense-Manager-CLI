@@ -18,7 +18,7 @@ def display_menu(menu: str) -> str:
     main_menu: str = "---------- EXPENSES MANAGER ---------- \n ---------- MAIN MENU ---------- \n 1 - Add an expense \n 2 - See all expenses \n 3 - Stats Menu \n 4 - Exit program \n"
     menu_all_expenses: str = "---------- EXPENSES MANAGER ---------- \n ---------- MENU ALL EXPENSES ---------- \n 1 - See a particular expense \n 2 - Back to main menu \n 3 - Exit program \n"
     menu_single_expense: str = "---------- EXPENSES MANAGER ---------- \n ---------- MENU SINGLE EXPENSE ---------- \n 1 - Back to main menu \n 2 - Delete this expense \n 3 - Exit program \n"
-    menu_stats: str = "---------- EXPENSES MANAGER ---------- \n ---------- MENU SINGLE EXPENSE ---------- \n 1 - Back to main menu \n 2 - See total amount \n 3 - See total per months \n 4 - See average expenses per months \n 5 - Exit Programm\n"
+    menu_stats: str = "---------- EXPENSES MANAGER ---------- \n ---------- MENU SINGLE EXPENSE ---------- \n 1 - Back to main menu \n 2 - See total amount \n 3 - See total per months \n 4 - See average expenses per months \n 5 - See details per months \n 6 - Exit Programm\n"
 
     if menu == "main_menu":
         return main_menu
@@ -42,11 +42,11 @@ def get_user_choice() -> int:
     while True:
         try:
             user_choice: int = (int(input("User choice: ")))
-            if user_choice not in [1, 2, 3, 4]:
+            if user_choice not in [1, 2, 3, 4, 5]:
                 raise ValueError
             return user_choice
         except ValueError:
-            print("Please type 1 or 2 3 or 4")
+            print("Please type 1 or 2 3 or 4 or 5")
 
 
 def main_menu(user_choice: int) -> None:
@@ -126,6 +126,8 @@ def menu_stats(user_choice):
     elif user_choice == 4:
         Expense.read_average_expenses_per_month()
         main()
+    elif user_choice == 5:
+        Expense.read_details_per_months()
     else:
         exit_program()
 

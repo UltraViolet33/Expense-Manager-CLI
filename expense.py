@@ -46,7 +46,6 @@ class Expense():
         while True:
             try:
                 amount = int(input("Amount: "))
-
                 kind = input("Kind: ")
                 if kind not in Expense.TYPES:
                     raise (ValueError)
@@ -130,7 +129,6 @@ class Expense():
 
         expense['id'] = id
         all_expenses.append(expense)
-
         self.write_expense_to_file(all_expenses)
 
     @classmethod
@@ -177,3 +175,43 @@ class Expense():
         average_per_month = round(average_per_month)
 
         print(f"Average expenses by month: {average_per_month} €")
+
+    @classmethod
+    def read_details_per_months(self):
+        all_expenses = self.get_expenses_from_file(self)
+        months = []
+        for item in all_expenses:
+            item['date'] = datetime.datetime.strptime(item['date'], '%Y-%m-%d')
+            month = item['date'].month
+            month = calendar.month_name[month]
+            if month not in months:
+                month_details = {}
+                month_details['month'] = month
+                month_details['types'] = []
+                months.append(month)
+
+        final_months = []
+
+        for month in months:
+            month_details = {}
+            month_details['month'] = month
+            month_details['types'] = {}
+            for type in Expense.TYPES:
+                month_details['types'][type] = 0
+            final_months.append(month_details)
+
+        for expense in all_expenses:
+
+            month = expense['date'].month
+            month = calendar.month_name[month]
+
+            for item in final_months:
+                if month == item['month']:
+                    for type in item["types"]:
+                        if type == expense['kind']:
+                            item["types"][type] += int(expense['amount'])
+
+        for month in final_months:
+            print("Month: ", month["month"])
+            types = [month['types']]
+            print(tabulate(types, headers="keys", tablefmt="grid"))
