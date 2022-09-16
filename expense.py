@@ -4,6 +4,8 @@ from tabulate import tabulate
 
 
 class Expense():
+    
+    TYPES = ["Food", "Clothes", "Restaurant", "Books", "Others"]
 
     def __init__(self, amount, kind):
         self.amount = amount
@@ -43,10 +45,13 @@ class Expense():
         while True:
             try:
                 amount = int(input("Amount: "))
+                
                 kind = input("Kind: ")
+                if kind not in Expense.TYPES:
+                    raise(ValueError)
                 return cls(amount, kind)
             except ValueError:
-                print("A positive integer")
+                print(f"For amount: a positive integer \n For the type: ")
 
     @classmethod
     def see_total_expenses_amount(self):
