@@ -1,10 +1,11 @@
 import csv
 import datetime
 from tabulate import tabulate
+import calendar
 
 
 class Expense():
-    
+
     TYPES = ["Food", "Clothes", "Restaurant", "Books", "Others"]
 
     def __init__(self, amount, kind):
@@ -45,13 +46,14 @@ class Expense():
         while True:
             try:
                 amount = int(input("Amount: "))
-                
                 kind = input("Kind: ")
                 if kind not in Expense.TYPES:
-                    raise(ValueError)
+                    raise (ValueError)
                 return cls(amount, kind)
             except ValueError:
-                print(f"For amount: a positive integer \n For the type: ")
+                print(
+                    f"For amount: a positive integer \n For the type: {Expense.TYPES}"
+                )
 
     @classmethod
     def see_total_expenses_amount(self):
@@ -127,5 +129,104 @@ class Expense():
 
         expense['id'] = id
         all_expenses.append(expense)
-
         self.write_expense_to_file(all_expenses)
+
+    @classmethod
+    def read_total_per_months(self):
+        total_per_months = self.get_total_per_months()
+        print(tabulate(total_per_months, headers="keys", tablefmt="grid"))
+
+    @classmethod
+    def get_total_per_months(self):
+        all_expenses = self.get_expenses_from_file(self)
+        months = {}
+        for item in all_expenses:
+            item['date'] = datetime.datetime.strptime(item['date'], '%Y-%m-%d')
+            month = item['date'].month
+            if month not in months:
+                months[month] = 0
+
+        for month in months:
+            for item in all_expenses:
+                month_expense = item['date'].month
+                if month_expense == month:
+                    months[month] += int(item['amount'])
+
+        final_months_amount = []
+        for item in months:
+            month_str = calendar.month_name[item]
+            single_month = {}
+            single_month["month"] = month_str
+            single_month["amount"] = (months[item])
+            final_months_amount.append(single_month)
+
+        return final_months_amount
+
+    @classmethod
+    def read_average_expenses_per_month(self):
+        expenses_per_month = self.get_total_per_months()
+        total = 0
+        total_months = len(expenses_per_month)
+
+        for item in expenses_per_month:
+            total += int(item["amount"])
+
+        average_per_month = total / total_months
+        average_per_month = round(average_per_month)
+
+        print(f"Average expenses by month: {average_per_month} €")
+
+    @classmethod
+    def read_details_per_months(self):
+        all_expenses = self.get_expenses_from_file(self)
+        months = []
+        for item in all_expenses:
+            item['date'] = datetime.datetime.strptime(item['date'], '%Y-%m-%d')
+            month = item['date'].month
+            month = calendar.month_name[month]
+            if month not in months:
+                month_details = {}
+                month_details['month'] = month
+                month_details['types'] = []
+                months.append(month)
+
+
+        final_months = []
+
+        for month in months:
+            month_details = {}
+            month_details['month'] = month
+            month_details['types'] = {}
+            for type in Expense.TYPES:
+                month_details['types'][type] = 0
+            final_months.append(month_details)
+
+        for expense in all_expenses:
+
+            month = expense['date'].month
+            month = calendar.month_name[month]
+
+            for item in final_months:
+                if month == item['month']:
+                    for type in item["types"]:
+                        if type == expense['kind']:
+                            item["types"][type] += int(expense['amount'])
+
+        previous_month = 0
+        for month in final_months:
+            print("Month: ", month["month"])
+            total = 0
+            for type in Expense.TYPES:
+                total += month["types"][type]
+            types = [month['types']]
+            print(f"Total expenses: {total} € ")
+            diff = total - previous_month
+            if diff > 0:
+                print(f"Diff previous month : + {diff} ")
+            elif diff < 0:
+                print(f"Diff previous month : {diff} ")
+            else:
+                print("No diff")
+            previous_month = total
+
+            print(tabulate(types, headers="keys", tablefmt="grid"))
