@@ -190,6 +190,7 @@ class Expense():
                 month_details['types'] = []
                 months.append(month)
 
+
         final_months = []
 
         for month in months:
@@ -211,7 +212,21 @@ class Expense():
                         if type == expense['kind']:
                             item["types"][type] += int(expense['amount'])
 
+        previous_month = 0
         for month in final_months:
             print("Month: ", month["month"])
+            total = 0
+            for type in Expense.TYPES:
+                total += month["types"][type]
             types = [month['types']]
+            print(f"Total expenses: {total} € ")
+            diff = total - previous_month
+            if diff > 0:
+                print(f"Diff previous month : + {diff} ")
+            elif diff < 0:
+                print(f"Diff previous month : {diff} ")
+            else:
+                print("No diff")
+            previous_month = total
+
             print(tabulate(types, headers="keys", tablefmt="grid"))
