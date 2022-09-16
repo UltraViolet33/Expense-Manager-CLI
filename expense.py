@@ -3,8 +3,9 @@ import datetime
 from tabulate import tabulate
 import calendar
 
+
 class Expense():
-    
+
     TYPES = ["Food", "Clothes", "Restaurant", "Books", "Others"]
 
     def __init__(self, amount, kind):
@@ -45,13 +46,15 @@ class Expense():
         while True:
             try:
                 amount = int(input("Amount: "))
-                
+
                 kind = input("Kind: ")
                 if kind not in Expense.TYPES:
-                    raise(ValueError)
+                    raise (ValueError)
                 return cls(amount, kind)
             except ValueError:
-                print(f"For amount: a positive integer \n For the type: {Expense.TYPES}")
+                print(
+                    f"For amount: a positive integer \n For the type: {Expense.TYPES}"
+                )
 
     @classmethod
     def see_total_expenses_amount(self):
@@ -132,6 +135,11 @@ class Expense():
 
     @classmethod
     def read_total_per_months(self):
+        total_per_months = self.get_total_per_months()
+        print(tabulate(total_per_months, headers="keys", tablefmt="grid"))
+
+    @classmethod
+    def get_total_per_months(self):
         all_expenses = self.get_expenses_from_file(self)
         months = {}
         for item in all_expenses:
@@ -139,24 +147,33 @@ class Expense():
             month = item['date'].month
             if month not in months:
                 months[month] = 0
-        
+
         for month in months:
             for item in all_expenses:
                 month_expense = item['date'].month
                 if month_expense == month:
                     months[month] += int(item['amount'])
-                    
+
         final_months_amount = []
         for item in months:
             month_str = calendar.month_name[item]
             single_month = {}
             single_month["month"] = month_str
-            single_month["amount"] = f"{str(months[item])} €"
+            single_month["amount"] = (months[item])
             final_months_amount.append(single_month)
-            
-        months = [months]
-        print(tabulate(final_months_amount, headers="keys", tablefmt="grid"))
-            
-            
-        
-        
+
+        return final_months_amount
+
+    @classmethod
+    def read_average_expenses_per_month(self):
+        expenses_per_month = self.get_total_per_months()
+        total = 0
+        total_months = len(expenses_per_month)
+
+        for item in expenses_per_month:
+            total += int(item["amount"])
+
+        average_per_month = total / total_months
+        average_per_month = round(average_per_month)
+
+        print(f"Average expenses by month: {average_per_month} €")
