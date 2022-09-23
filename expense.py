@@ -3,16 +3,25 @@ import datetime
 from tabulate import tabulate
 import calendar
 
+DEBUG = False
+if DEBUG:
+    FILE_PATH = './debug/expenses.csv'
+else:
+    FILE_PATH = "expenses.csv"
 
 class Expense():
 
-    TYPES = ["Food", "Clothes", "Restaurant", "Books", "Others"]
+    TYPES = ["Food", "Clothes", "Restaurant", "Books", "Others", "Washing", "Bus"]
+    
+
 
     def __init__(self, amount, kind):
         self.amount = amount
         self.kind = kind
         self.date = datetime.date.today()
         self.save_expense()
+        self.debug = True
+
 
     def __str__(self):
         return f"amount: {self.amount}, kind: {self.kind}, date: {self.date}"
@@ -104,7 +113,7 @@ class Expense():
 
     def get_expenses_from_file(self):
         all_expenses = []
-        with open("expenses.csv", newline="") as csvfile:
+        with open(FILE_PATH, newline="") as csvfile:
             reader = csv.DictReader(csvfile)
             for row in reader:
                 all_expenses.append(row)
@@ -115,7 +124,7 @@ class Expense():
     def write_expense_to_file(self, expenses):
         header = ["id", "kind", "amount", "date"]
 
-        with open("expenses.csv", "w") as f:
+        with open(FILE_PATH, "w") as f:
             writer = csv.DictWriter(f, fieldnames=header)
             writer.writeheader()
             writer.writerows(expenses)
