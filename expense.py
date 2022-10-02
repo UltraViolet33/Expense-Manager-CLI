@@ -54,7 +54,8 @@ class Expense():
     def get(cls):
         while True:
             try:
-                amount = int(input("Amount: "))
+                amount = float(input("Amount: "))
+                print(amount)
                 kind = input("Kind: ")
                 if kind not in Expense.TYPES:
                     raise (ValueError)
@@ -69,7 +70,7 @@ class Expense():
         expenses = self.get_expenses_from_file(self)
         total_amount = 0
         for item in expenses:
-            total_amount += int(item["amount"])
+            total_amount += float(item["amount"])
 
         return total_amount
 
@@ -159,7 +160,7 @@ class Expense():
             for item in all_expenses:
                 month_expense = item['date'].month
                 if month_expense == month:
-                    months[month] += int(item['amount'])
+                    months[month] += float(item['amount'])
 
         final_months_amount = []
         for item in months:
@@ -178,10 +179,10 @@ class Expense():
         total_months = len(expenses_per_month)
 
         for item in expenses_per_month:
-            total += int(item["amount"])
+            total += float(item["amount"])
 
         average_per_month = total / total_months
-        average_per_month = round(average_per_month)
+        average_per_month = round(average_per_month, 2)
 
         print(f"Average expenses by month: {average_per_month} €")
 
@@ -219,7 +220,7 @@ class Expense():
                 if month == item['month']:
                     for type in item["types"]:
                         if type == expense['kind']:
-                            item["types"][type] += int(expense['amount'])
+                            item["types"][type] += float(expense['amount'])
 
         previous_month = 0
         for month in final_months:
