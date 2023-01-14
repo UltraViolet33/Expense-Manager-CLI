@@ -9,11 +9,12 @@ if DEBUG:
 else:
     FILE_PATH = "expenses.csv"
 
+
 class Expense():
 
-    TYPES = ["Food", "Clothes", "Restaurant", "Books", "Others", "Washing", "Bus"]
-    
-
+    TYPES = [
+        "Food", "Clothes", "Restaurant", "Books", "Others", "Washing", "Bus"
+    ]
 
     def __init__(self, amount, kind):
         self.amount = amount
@@ -21,7 +22,6 @@ class Expense():
         self.date = datetime.date.today()
         self.save_expense()
         self.debug = True
-
 
     def __str__(self):
         return f"amount: {self.amount}, kind: {self.kind}, date: {self.date}"
@@ -199,7 +199,6 @@ class Expense():
                 month_details['month'] = month
                 month_details['types'] = []
                 months.append(month)
-
 
         final_months = []
 

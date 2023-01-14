@@ -1,5 +1,3 @@
-# Expense Manager
+# Expense Manager CLI Python 
 
-## TODO Left
-
-- Total amount by kind of expense
+Final project for CS50 Introduction to Programming with Python

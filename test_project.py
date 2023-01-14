@@ -4,13 +4,11 @@ from unittest.mock import patch
 
 
 def test_display_menu():
-    main_menu:  str = "---------- EXPENSES MANAGER ---------- \n ---------- MAIN MENU ---------- \n 1 - Add an expense \n 2 - See all expenses \n 3 - Stats Menu \n 4 - Exit program \n"
+    main_menu: str = "---------- EXPENSES MANAGER ---------- \n ---------- MAIN MENU ---------- \n 1 - Add an expense \n 2 - See all expenses \n 3 - Stats Menu \n 4 - Exit program \n"
     menu_all_expenses: str = "---------- EXPENSES MANAGER ---------- \n ---------- MENU ALL EXPENSES ---------- \n 1 - See a particular expense \n 2 - Back to main menu \n 3 - Exit program \n"
     menu_single_expense: str = "---------- EXPENSES MANAGER ---------- \n ---------- MENU SINGLE EXPENSE ---------- \n 1 - Back to main menu \n 2 - Delete this expense \n 3 - Exit program \n"
     menu_stats: str = "---------- EXPENSES MANAGER ---------- \n ---------- MENU SINGLE EXPENSE ---------- \n 1 - Back to main menu \n 2 - See total amount \n 3 - See total per months \n 4 - See average expenses per months \n 5 - See details per months \n 6 - Exit Programm\n"
 
-
-    
     assert project.display_menu("main_menu") == main_menu
     assert project.display_menu("menu_all_expenses") == menu_all_expenses
     assert project.display_menu("menu_single_expense") == menu_single_expense
@@ -56,12 +54,12 @@ def test_menu_single_expense(mock_main):
 
     with pytest.raises(SystemExit):
         project.menu_single_expense(3)
-        
-        
-@patch("project.main")     
+
+
+@patch("project.main")
 def test_menu_stats(mock_main):
     project.menu_stats(1)
     mock_main.assert_called_once()
-    
+
     with pytest.raises(SystemExit):
-        project.menu_stats(6)    
+        project.menu_stats(6)
